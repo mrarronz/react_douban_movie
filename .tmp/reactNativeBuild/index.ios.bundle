@@ -53147,15 +53147,15 @@ var _ComingScene = require(374            ); // 374 = ./ComingScene
 
 var _ComingScene2 = babelHelpers.interopRequireDefault(_ComingScene);
 
-var _TheaterScene = require(379             ); // 379 = ./TheaterScene
+var _TheaterScene = require(380             ); // 380 = ./TheaterScene
 
 var _TheaterScene2 = babelHelpers.interopRequireDefault(_TheaterScene);
 
-var _TabbarItem = require(380                    ); // 380 = ../widgets/TabbarItem
+var _TabbarItem = require(381                    ); // 381 = ../widgets/TabbarItem
 
 var _TabbarItem2 = babelHelpers.interopRequireDefault(_TabbarItem);
 
-var _DetailScene = require(381            ); // 381 = ./DetailScene
+var _DetailScene = require(382            ); // 382 = ./DetailScene
 
 var _DetailScene2 = babelHelpers.interopRequireDefault(_DetailScene);
 
@@ -53202,8 +53202,8 @@ var Tab = (0, _reactNavigation.TabNavigator)({
           return _React2.default.createElement(_TabbarItem2.default, {
             tintColor: tintColor,
             focused: focused,
-            normalImage: require(382                   ), // 382 = ../image/playing.png
-            selectedImage: require(383                          ), // 383 = ../image/playing-active.png
+            normalImage: require(383                   ), // 383 = ../image/playing.png
+            selectedImage: require(384                          ), // 384 = ../image/playing-active.png
             __source: {
               fileName: _jsxFileName,
               lineNumber: 30
@@ -53226,8 +53226,8 @@ var Tab = (0, _reactNavigation.TabNavigator)({
           return _React2.default.createElement(_TabbarItem2.default, {
             tintColor: tintColor,
             focused: focused,
-            normalImage: require(384                  ), // 384 = ../image/coming.png
-            selectedImage: require(385                         ), // 385 = ../image/coming-active.png
+            normalImage: require(385                  ), // 385 = ../image/coming.png
+            selectedImage: require(386                         ), // 386 = ../image/coming-active.png
             __source: {
               fileName: _jsxFileName,
               lineNumber: 45
@@ -60399,6 +60399,10 @@ var _MovieCell = require(378          ); // 378 = ./MovieCell
 
 var _MovieCell2 = babelHelpers.interopRequireDefault(_MovieCell);
 
+var _RefreshState = require(379                     ); // 379 = ../common/RefreshState
+
+var _RefreshState2 = babelHelpers.interopRequireDefault(_RefreshState);
+
 var ComingScene = function (_Component) {
   babelHelpers.inherits(ComingScene, _Component);
 
@@ -60416,7 +60420,8 @@ var ComingScene = function (_Component) {
       loaded: false,
       pageIndex: 0,
       movieList: [],
-      isHeaderRefreshing: false
+      isHeaderRefreshing: false,
+      footerRefreshState: _RefreshState2.default.Idle
     };
     return _this;
   }
@@ -60429,14 +60434,20 @@ var ComingScene = function (_Component) {
   }, {
     key: 'loadMovieData',
     value: function loadMovieData() {
-      var _this2 = this;
-
+      var that = this;
       var pageIndex = this.state.pageIndex;
-      var tempMovies = this.state.movieList;
-      fetch((0, _service.comingMovies)('武汉', pageIndex, 10)).then(function (response) {
+      fetch((0, _service.comingMovies)('武汉', pageIndex, 20)).then(function (response) {
         return response.json();
       }).then(function (json) {
         console.log(json);
+        if (json == null) {
+          that.setState({
+            loaded: true,
+            isHeaderRefreshing: false,
+            footerRefreshState: _RefreshState2.default.Failure
+          });
+          return;
+        }
         var movies = [];
         for (var idx in json.subjects) {
           var movieItem = json.subjects[idx];
@@ -60463,20 +60474,30 @@ var ComingScene = function (_Component) {
           movieItem["actorNames"] = actors;
           movies.push(movieItem);
         }
-        var movieList = pageIndex == 0 ? movies : tempMovies.concat(movies);
+        var movieList = that.state.movieList.concat(movies);
+        var refreshState = movies.length == 0 ? _RefreshState2.default.NoMoreData : _RefreshState2.default.Idle;
+        var start = pageIndex + json.subjects.length;
 
-        _this2.setState({
-          dataSource: _this2.state.dataSource.cloneWithRows(movieList),
+        that.setState({
+          dataSource: that.state.dataSource.cloneWithRows(movieList),
           loaded: true,
+          pageIndex: start,
           movieList: movieList,
-          isHeaderRefreshing: false
+          isHeaderRefreshing: false,
+          footerRefreshState: refreshState
+        });
+      }).catch(function (error) {
+        that.setState({
+          loaded: true,
+          isHeaderRefreshing: false,
+          footerRefreshState: _RefreshState2.default.Failure
         });
       });
     }
   }, {
     key: 'render',
     value: function render() {
-      var _this3 = this;
+      var _this2 = this;
 
       if (!this.state.loaded) {
         return this.renderLoadingView();
@@ -60486,25 +60507,32 @@ var ComingScene = function (_Component) {
         renderRow: function renderRow(movie) {
           return _react2.default.createElement(_MovieCell2.default, { movie: movie, __source: {
               fileName: _jsxFileName,
-              lineNumber: 81
+              lineNumber: 105
             }
           });
+        },
+        renderFooter: function renderFooter() {
+          return _this2.renderFooter();
+        },
+        onEndReachedThreshold: 20,
+        onEndReached: function onEndReached() {
+          return _this2.footerRefreshing();
         },
         refreshControl: _react2.default.createElement(_reactNative.RefreshControl, {
           refreshing: this.state.isHeaderRefreshing,
           onRefresh: function onRefresh() {
-            return _this3.headerRefreshing();
+            return _this2.headerRefreshing();
           },
           tintColor: 'gray',
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 84
+            lineNumber: 111
           }
         }),
         style: styles.listView,
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 78
+          lineNumber: 102
         }
       });
     }
@@ -60515,19 +60543,19 @@ var ComingScene = function (_Component) {
         _reactNative.View,
         { style: styles.loadingView, __source: {
             fileName: _jsxFileName,
-            lineNumber: 97
+            lineNumber: 124
           }
         },
         _react2.default.createElement(_reactNative.ActivityIndicator, { animating: true, size: 'small', __source: {
             fileName: _jsxFileName,
-            lineNumber: 98
+            lineNumber: 125
           }
         }),
         _react2.default.createElement(
           _reactNative.Text,
           { style: { color: '#666666', paddingLeft: 10 }, __source: {
               fileName: _jsxFileName,
-              lineNumber: 99
+              lineNumber: 126
             }
           },
           '\u52AA\u529B\u52A0\u8F7D\u4E2D'
@@ -60535,11 +60563,94 @@ var ComingScene = function (_Component) {
       );
     }
   }, {
+    key: 'renderFooter',
+    value: function renderFooter() {
+      var footer = null;
+
+      switch (this.state.footerRefreshState) {
+        case _RefreshState2.default.Idle:
+          break;
+        case _RefreshState2.default.Refreshing:
+          footer = _react2.default.createElement(
+            _reactNative.View,
+            { style: styles.loadingView, __source: {
+                fileName: _jsxFileName,
+                lineNumber: 139
+              }
+            },
+            _react2.default.createElement(_reactNative.ActivityIndicator, { size: 'small', __source: {
+                fileName: _jsxFileName,
+                lineNumber: 140
+              }
+            }),
+            _react2.default.createElement(
+              _reactNative.Text,
+              { style: { color: '#666666', paddingLeft: 10 }, __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 141
+                }
+              },
+              '\u52AA\u529B\u52A0\u8F7D\u4E2D'
+            )
+          );
+          break;
+        case _RefreshState2.default.NoMoreData:
+          footer = _react2.default.createElement(
+            _reactNative.View,
+            { style: styles.loadingView, __source: {
+                fileName: _jsxFileName,
+                lineNumber: 146
+              }
+            },
+            _react2.default.createElement(
+              _reactNative.Text,
+              { style: { color: '#666666' }, __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 147
+                }
+              },
+              '\u6CA1\u6709\u66F4\u591A\u6570\u636E\u4E86'
+            )
+          );
+          break;
+        case _RefreshState2.default.Failure:
+          footer = _react2.default.createElement(
+            _reactNative.View,
+            { style: styles.loadingView, __source: {
+                fileName: _jsxFileName,
+                lineNumber: 152
+              }
+            },
+            _react2.default.createElement(
+              _reactNative.Text,
+              { style: { color: '#666666' }, __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 153
+                }
+              },
+              '\u52A0\u8F7D\u5931\u8D25\uFF0C\u8BF7\u7A0D\u540E\u91CD\u8BD5'
+            )
+          );
+          break;
+      }
+      return footer;
+    }
+  }, {
     key: 'headerRefreshing',
     value: function headerRefreshing() {
       this.setState({
-        pageIndex: 0,
         isHeaderRefreshing: true
+      });
+      this.loadMovieData();
+    }
+  }, {
+    key: 'footerRefreshing',
+    value: function footerRefreshing() {
+      if (this.state.footerRefreshState == _RefreshState2.default.refreshing || this.state.footerRefreshState == _RefreshState2.default.NoMoreData || this.state.isHeaderRefreshing) {
+        return;
+      }
+      this.setState({
+        footerRefreshState: _RefreshState2.default.Refreshing
       });
       this.loadMovieData();
     }
@@ -60562,7 +60673,8 @@ var styles = _reactNative.StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF'
+    backgroundColor: '#F5FCFF',
+    padding: 10
   }
 });
 }, 374, null, "react_douban_movie/src/scene/ComingScene.js");
@@ -60645,140 +60757,152 @@ var MovieCell = function (_Component) {
   babelHelpers.createClass(MovieCell, [{
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       var movie = this.props.movie;
 
       return _react2.default.createElement(
-        _reactNative.View,
-        { style: styles.container, __source: {
+        _reactNative.TouchableHighlight,
+        { onPress: function onPress() {
+            return _this2.props.onPress();
+          }, __source: {
             fileName: _jsxFileName,
             lineNumber: 10
           }
         },
-        _react2.default.createElement(_reactNative.Image, {
-          source: { uri: movie.images.large },
-          style: styles.thumbnail,
-          __source: {
-            fileName: _jsxFileName,
-            lineNumber: 11
-          }
-        }),
         _react2.default.createElement(
           _reactNative.View,
-          { style: styles.rightContainer, __source: {
+          { style: styles.container, __source: {
               fileName: _jsxFileName,
-              lineNumber: 15
+              lineNumber: 11
             }
           },
+          _react2.default.createElement(_reactNative.Image, {
+            source: { uri: movie.images.large },
+            style: styles.thumbnail,
+            __source: {
+              fileName: _jsxFileName,
+              lineNumber: 12
+            }
+          }),
           _react2.default.createElement(
-            _reactNative.Text,
-            { style: styles.title, __source: {
+            _reactNative.View,
+            { style: styles.rightContainer, __source: {
                 fileName: _jsxFileName,
                 lineNumber: 16
               }
             },
-            movie.title
-          ),
-          _react2.default.createElement(
-            _reactNative.Text,
-            { style: styles.year, __source: {
-                fileName: _jsxFileName,
-                lineNumber: 17
-              }
-            },
-            movie.year
-          ),
-          movie.rating.average != 0 ? _react2.default.createElement(
-            _reactNative.View,
-            { style: styles.horizontalView, __source: {
-                fileName: _jsxFileName,
-                lineNumber: 20
-              }
-            },
             _react2.default.createElement(
               _reactNative.Text,
-              { style: styles.titleTag, __source: {
+              { style: styles.title, __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 17
+                }
+              },
+              movie.title
+            ),
+            _react2.default.createElement(
+              _reactNative.Text,
+              { style: styles.year, __source: {
+                  fileName: _jsxFileName,
+                  lineNumber: 18
+                }
+              },
+              movie.year
+            ),
+            movie.rating.average != 0 ? _react2.default.createElement(
+              _reactNative.View,
+              { style: styles.horizontalView, __source: {
                   fileName: _jsxFileName,
                   lineNumber: 21
                 }
               },
-              '\u8BC4\u5206\uFF1A'
-            ),
-            _react2.default.createElement(
-              _reactNative.Text,
-              { style: styles.score, __source: {
-                  fileName: _jsxFileName,
-                  lineNumber: 22
-                }
-              },
-              movie.rating.average
-            )
-          ) : _react2.default.createElement(
-            _reactNative.View,
-            { style: styles.horizontalView, __source: {
-                fileName: _jsxFileName,
-                lineNumber: 24
-              }
-            },
-            _react2.default.createElement(
-              _reactNative.Text,
-              { style: styles.titleTag, __source: {
+              _react2.default.createElement(
+                _reactNative.Text,
+                { style: styles.titleTag, __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 22
+                  }
+                },
+                '\u8BC4\u5206\uFF1A'
+              ),
+              _react2.default.createElement(
+                _reactNative.Text,
+                { style: styles.score, __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 23
+                  }
+                },
+                movie.rating.average
+              )
+            ) : _react2.default.createElement(
+              _reactNative.View,
+              { style: styles.horizontalView, __source: {
                   fileName: _jsxFileName,
                   lineNumber: 25
                 }
               },
-              '\u6682\u65E0\u8BC4\u5206'
-            )
-          ),
-          _react2.default.createElement(
-            _reactNative.View,
-            { style: styles.horizontalView, __source: {
-                fileName: _jsxFileName,
-                lineNumber: 28
-              }
-            },
+              _react2.default.createElement(
+                _reactNative.Text,
+                { style: styles.titleTag, __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 26
+                  }
+                },
+                '\u6682\u65E0\u8BC4\u5206'
+              )
+            ),
             _react2.default.createElement(
-              _reactNative.Text,
-              { style: styles.titleTag, __source: {
+              _reactNative.View,
+              { style: styles.horizontalView, __source: {
                   fileName: _jsxFileName,
                   lineNumber: 29
                 }
               },
-              '\u5BFC\u6F14\uFF1A'
+              _react2.default.createElement(
+                _reactNative.Text,
+                { style: styles.titleTag, __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 30
+                  }
+                },
+                '\u5BFC\u6F14\uFF1A'
+              ),
+              _react2.default.createElement(
+                _reactNative.Text,
+                { style: styles.name, __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 31
+                  }
+                },
+                movie.directorNames
+              )
             ),
             _react2.default.createElement(
-              _reactNative.Text,
-              { style: styles.name, __source: {
-                  fileName: _jsxFileName,
-                  lineNumber: 30
-                }
-              },
-              movie.directorNames
-            )
-          ),
-          _react2.default.createElement(
-            _reactNative.View,
-            { style: styles.horizontalView, __source: {
-                fileName: _jsxFileName,
-                lineNumber: 32
-              }
-            },
-            _react2.default.createElement(
-              _reactNative.Text,
-              { style: styles.titleTag, __source: {
+              _reactNative.View,
+              { style: styles.horizontalView, __source: {
                   fileName: _jsxFileName,
                   lineNumber: 33
                 }
               },
-              '\u4E3B\u6F14\uFF1A'
-            ),
-            _react2.default.createElement(
-              _reactNative.Text,
-              { style: styles.name, __source: {
-                  fileName: _jsxFileName,
-                  lineNumber: 34
-                }
-              },
-              movie.actorNames
+              _react2.default.createElement(
+                _reactNative.Text,
+                { style: styles.titleTag, __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 34
+                  }
+                },
+                '\u4E3B\u6F14\uFF1A'
+              ),
+              _react2.default.createElement(
+                _reactNative.Text,
+                { style: styles.name, __source: {
+                    fileName: _jsxFileName,
+                    lineNumber: 35
+                  }
+                },
+                movie.actorNames
+              )
             )
           )
         )
@@ -60850,6 +60974,16 @@ var styles = _reactNative.StyleSheet.create({
   }
 });
 }, 378, null, "react_douban_movie/src/scene/MovieCell.js");
+__d(/* react_douban_movie/src/common/RefreshState.js */function(global, require, module, exports) {Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = {
+  Idle: 'Idle',
+  Refreshing: 'Refreshing',
+  NoMoreData: 'NoMoreData',
+  Failure: 'Failure'
+};
+}, 379, null, "react_douban_movie/src/common/RefreshState.js");
 __d(/* react_douban_movie/src/scene/TheaterScene.js */function(global, require, module, exports) {Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -60893,7 +61027,7 @@ var TheaterScene = function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      fetch((0, _service.queryMovies)('武汉', 0, 10)).then(function (response) {
+      fetch((0, _service.queryMovies)('武汉', 0, 20)).then(function (response) {
         return response.json();
       }).then(function (json) {
         console.log(json);
@@ -60932,13 +61066,18 @@ var TheaterScene = function (_Component) {
   }, {
     key: 'render',
     value: function render() {
+      var _this3 = this;
+
       if (!this.state.loaded) {
         return this.renderLoadingView();
       }
       return _react2.default.createElement(_reactNative.ListView, {
         dataSource: this.state.dataSource,
         renderRow: function renderRow(movie) {
-          return _react2.default.createElement(_MovieCell2.default, { movie: movie, __source: {
+          return _react2.default.createElement(_MovieCell2.default, { movie: movie, onPress: function onPress() {
+              _this3.props.navigation.navigate('Detail');
+            },
+            __source: {
               fileName: _jsxFileName,
               lineNumber: 66
             }
@@ -60958,19 +61097,19 @@ var TheaterScene = function (_Component) {
         _reactNative.View,
         { style: styles.loadingView, __source: {
             fileName: _jsxFileName,
-            lineNumber: 75
+            lineNumber: 78
           }
         },
         _react2.default.createElement(_reactNative.ActivityIndicator, { animating: true, size: 'small', __source: {
             fileName: _jsxFileName,
-            lineNumber: 76
+            lineNumber: 79
           }
         }),
         _react2.default.createElement(
           _reactNative.Text,
           { style: { color: '#666666', paddingLeft: 10 }, __source: {
               fileName: _jsxFileName,
-              lineNumber: 77
+              lineNumber: 80
             }
           },
           '\u52AA\u529B\u52A0\u8F7D\u4E2D'
@@ -60999,7 +61138,7 @@ var styles = _reactNative.StyleSheet.create({
     backgroundColor: '#F5FCFF'
   }
 });
-}, 379, null, "react_douban_movie/src/scene/TheaterScene.js");
+}, 380, null, "react_douban_movie/src/scene/TheaterScene.js");
 __d(/* react_douban_movie/src/widgets/TabbarItem.js */function(global, require, module, exports) {Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -61037,7 +61176,7 @@ var TabbarItem = function (_Component) {
 }(_react.Component);
 
 exports.default = TabbarItem;
-}, 380, null, "react_douban_movie/src/widgets/TabbarItem.js");
+}, 381, null, "react_douban_movie/src/widgets/TabbarItem.js");
 __d(/* react_douban_movie/src/scene/DetailScene.js */function(global, require, module, exports) {Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -61094,15 +61233,15 @@ var DetailScene = function (_Component) {
 }(_react.Component);
 
 exports.default = DetailScene;
-}, 381, null, "react_douban_movie/src/scene/DetailScene.js");
+}, 382, null, "react_douban_movie/src/scene/DetailScene.js");
 __d(/* react_douban_movie/src/image/playing.png */function(global, require, module, exports) {module.exports=require(166                                         ).registerAsset({"__packager_asset":true,"httpServerLocation":"/assets/src/image","width":32,"height":32,"scales":[1],"hash":"4087f40881b5b897f65d9190571aeb4c","name":"playing","type":"png"}); // 166 = react-native/Libraries/Image/AssetRegistry
-}, 382, null, "react_douban_movie/src/image/playing.png");
+}, 383, null, "react_douban_movie/src/image/playing.png");
 __d(/* react_douban_movie/src/image/playing-active.png */function(global, require, module, exports) {module.exports=require(166                                         ).registerAsset({"__packager_asset":true,"httpServerLocation":"/assets/src/image","width":32,"height":32,"scales":[1],"hash":"6c2ac78a5a98b4b17f83172f4ea6e657","name":"playing-active","type":"png"}); // 166 = react-native/Libraries/Image/AssetRegistry
-}, 383, null, "react_douban_movie/src/image/playing-active.png");
+}, 384, null, "react_douban_movie/src/image/playing-active.png");
 __d(/* react_douban_movie/src/image/coming.png */function(global, require, module, exports) {module.exports=require(166                                         ).registerAsset({"__packager_asset":true,"httpServerLocation":"/assets/src/image","width":32,"height":32,"scales":[1],"hash":"11a97a4416b3dab75f66d2c47abd37ae","name":"coming","type":"png"}); // 166 = react-native/Libraries/Image/AssetRegistry
-}, 384, null, "react_douban_movie/src/image/coming.png");
+}, 385, null, "react_douban_movie/src/image/coming.png");
 __d(/* react_douban_movie/src/image/coming-active.png */function(global, require, module, exports) {module.exports=require(166                                         ).registerAsset({"__packager_asset":true,"httpServerLocation":"/assets/src/image","width":32,"height":32,"scales":[1],"hash":"3c447ecca16fb07747816db9194d3ab3","name":"coming-active","type":"png"}); // 166 = react-native/Libraries/Image/AssetRegistry
-}, 385, null, "react_douban_movie/src/image/coming-active.png");
+}, 386, null, "react_douban_movie/src/image/coming-active.png");
 ;require(71);
 ;require(0);
 //# sourceMappingURL=index.ios.map

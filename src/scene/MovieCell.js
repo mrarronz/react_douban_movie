@@ -1,40 +1,42 @@
 import React, {Component} from 'react';
-import {View, Image, Text, StyleSheet} from 'react-native';
+import {View, Image, Text, StyleSheet, TouchableHighlight} from 'react-native';
 import color from '../common/color';
 import screen from '../common/screen';
 
 export default class MovieCell extends Component {
-  render () {
-    let { movie } = this.props
+  render() {
+    let {movie} = this.props
     return (
-      <View style={styles.container}>
-        <Image
-          source={{uri: movie.images.large}}
-          style={styles.thumbnail}
-        />
-        <View style={styles.rightContainer}>
-          <Text style={styles.title}>{movie.title}</Text>
-          <Text style={styles.year}>{movie.year}</Text>
-          {
-            movie.rating.average != 0 ?
-              (<View style={styles.horizontalView}>
-                <Text style={styles.titleTag}>评分：</Text>
-                <Text style={styles.score}>{movie.rating.average}</Text>
-              </View>) :
-              (<View style={styles.horizontalView}>
-                <Text style={styles.titleTag}>暂无评分</Text>
-              </View>)
-          }
-          <View style={styles.horizontalView}>
-            <Text style={styles.titleTag}>导演：</Text>
-            <Text style={styles.name}>{movie.directorNames}</Text>
-          </View>
-          <View style={styles.horizontalView}>
-            <Text style={styles.titleTag}>主演：</Text>
-            <Text style={styles.name}>{movie.actorNames}</Text>
+      <TouchableHighlight onPress={() => this.props.onPress()}>
+        <View style={styles.container}>
+          <Image
+            source={{uri: movie.images.large}}
+            style={styles.thumbnail}
+          />
+          <View style={styles.rightContainer}>
+            <Text style={styles.title}>{movie.title}</Text>
+            <Text style={styles.year}>{movie.year}</Text>
+            {
+              movie.rating.average != 0 ?
+                (<View style={styles.horizontalView}>
+                  <Text style={styles.titleTag}>评分：</Text>
+                  <Text style={styles.score}>{movie.rating.average}</Text>
+                </View>) :
+                (<View style={styles.horizontalView}>
+                  <Text style={styles.titleTag}>暂无评分</Text>
+                </View>)
+            }
+            <View style={styles.horizontalView}>
+              <Text style={styles.titleTag}>导演：</Text>
+              <Text style={styles.name}>{movie.directorNames}</Text>
+            </View>
+            <View style={styles.horizontalView}>
+              <Text style={styles.titleTag}>主演：</Text>
+              <Text style={styles.name}>{movie.actorNames}</Text>
+            </View>
           </View>
         </View>
-      </View>
+      </TouchableHighlight>
     )
   }
 }
@@ -44,20 +46,20 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     backgroundColor: '#F5FCFF',
-    padding:10,
-    borderBottomWidth:screen.onePixel,
+    padding: 10,
+    borderBottomWidth: screen.onePixel,
     borderColor: color.border
   },
   rightContainer: {
     flex: 1,
     flexDirection: 'column',
     paddingLeft: 10,
-    paddingTop:5,
-    paddingBottom:5
+    paddingTop: 5,
+    paddingBottom: 5
   },
   title: {
     fontSize: 16,
-    fontWeight:'bold',
+    fontWeight: 'bold',
     color: '#333333',
     textAlign: 'left',
   },
@@ -73,17 +75,17 @@ const styles = StyleSheet.create({
   },
   horizontalView: {
     flexDirection: 'row',
-    marginTop:10
+    marginTop: 10
   },
   titleTag: {
     color: '#666666',
   },
   score: {
     color: '#ff8800',
-    fontWeight:'bold',
+    fontWeight: 'bold',
   },
   name: {
-    color:'#333333',
+    color: '#333333',
     flex: 1
   },
   listView: {

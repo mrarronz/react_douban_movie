@@ -9,7 +9,7 @@ export default class TheaterScene extends Component {
     headerTitle: '豆瓣电影'
   }
   
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       dataSource: new ListView.DataSource({
@@ -20,7 +20,7 @@ export default class TheaterScene extends Component {
   }
   
   componentDidMount() {
-    fetch(queryMovies('武汉', 0, 10)).then((response) => response.json()).then((json) => {
+    fetch(queryMovies('武汉', 0, 20)).then((response) => response.json()).then((json) => {
       console.log(json)
       var movies = []
       for (var idx in json.subjects) {
@@ -49,32 +49,35 @@ export default class TheaterScene extends Component {
         movies.push(movieItem)
       }
       this.setState({
-        dataSource:this.state.dataSource.cloneWithRows(movies),
+        dataSource: this.state.dataSource.cloneWithRows(movies),
         loaded: true
       })
     })
   }
   
-  render(){
+  render() {
     if (!this.state.loaded) {
       return this.renderLoadingView()
     }
     return (
       <ListView
-        dataSource = {this.state.dataSource}
-        renderRow = {(movie) =>
-          <MovieCell movie={movie}/>
+        dataSource={this.state.dataSource}
+        renderRow={(movie) =>
+          <MovieCell movie={movie} onPress={() => {
+              this.props.navigation.navigate('Detail')
+            }}
+          />
         }
         style={styles.listView}
       />
     )
   }
   
-  renderLoadingView(){
+  renderLoadingView() {
     return (
       <View style={styles.loadingView}>
         <ActivityIndicator animating={true} size="small"/>
-        <Text style={{ color:'#666666', paddingLeft:10 }}>努力加载中</Text>
+        <Text style={{color: '#666666', paddingLeft: 10}}>努力加载中</Text>
       </View>
     )
   }

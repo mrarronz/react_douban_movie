@@ -4,6 +4,7 @@ import color from '../common/color';
 import screen from '../common/screen';
 import {comingMovies} from '../common/service';
 import MovieCell from './MovieCell';
+import RefreshState from '../common/RefreshState';
 
 export default class ComingScene extends Component {
   
@@ -11,28 +12,40 @@ export default class ComingScene extends Component {
     headerTitle: '豆瓣电影'
   }
   
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       dataSource: new ListView.DataSource({
-        rowHasChanged:(row1, row2) => row1 != row2
+        rowHasChanged: (row1, row2) => row1 != row2
       }),
       loaded: false,
       pageIndex: 0,
       movieList: [],
-      isHeaderRefreshing: false
+      isHeaderRefreshing: false,
+      footerRefreshState: RefreshState.Idle
     }
   }
   
-  componentDidMount(){
+  componentDidMount() {
     this.loadMovieData()
   }
   
-  loadMovieData(){
+  /**
+   * 加载电影数据
+   */
+  loadMovieData() {
+    var that = this
     let pageIndex = this.state.pageIndex
-    let tempMovies = this.state.movieList
-    fetch(comingMovies('武汉', pageIndex, 10)).then((response) => response.json()).then((json) => {
+    fetch(comingMovies('武汉', pageIndex, 20)).then((response) => response.json()).then((json) => {
       console.log(json)
+      if (json == null) {
+        that.setState({
+          loaded: true,
+          isHeaderRefreshing: false,
+          footerRefreshState: RefreshState.Failure
+        })
+        return
+      }
       var movies = []
       for (var idx in json.subjects) {
         var movieItem = json.subjects[idx]
@@ -46,7 +59,7 @@ export default class ComingScene extends Component {
           }
         }
         movieItem["directorNames"] = directors
-      
+        
         var actors = ""
         for (var index in movieItem.casts) {
           var actor = movieItem.casts[index]
@@ -59,27 +72,41 @@ export default class ComingScene extends Component {
         movieItem["actorNames"] = actors
         movies.push(movieItem)
       }
-      let movieList = (pageIndex == 0) ? movies : tempMovies.concat(movies)
+      let movieList = that.state.movieList.concat(movies)
+      let refreshState = (movies.length == 0) ? RefreshState.NoMoreData : RefreshState.Idle
+      let start = pageIndex + json.subjects.length
       
-      this.setState({
-        dataSource:this.state.dataSource.cloneWithRows(movieList),
+      that.setState({
+        dataSource: that.state.dataSource.cloneWithRows(movieList),
         loaded: true,
+        pageIndex: start,
         movieList: movieList,
-        isHeaderRefreshing: false
+        isHeaderRefreshing: false,
+        footerRefreshState: refreshState
       })
     })
+      .catch((error) => {
+        that.setState({
+          loaded: true,
+          isHeaderRefreshing: false,
+          footerRefreshState: RefreshState.Failure
+        })
+      })
   }
   
-  render(){
+  render() {
     if (!this.state.loaded) {
       return this.renderLoadingView()
     }
     return (
       <ListView
-        dataSource = {this.state.dataSource}
-        renderRow = {(movie) =>
+        dataSource={this.state.dataSource}
+        renderRow={(movie) =>
           <MovieCell movie={movie}/>
         }
+        renderFooter={() => this.renderFooter()}
+        onEndReachedThreshold={20}
+        onEndReached={() => this.footerRefreshing()}
         refreshControl={
           <RefreshControl
             refreshing={this.state.isHeaderRefreshing}
@@ -92,19 +119,60 @@ export default class ComingScene extends Component {
     )
   }
   
-  renderLoadingView(){
+  renderLoadingView() {
     return (
       <View style={styles.loadingView}>
         <ActivityIndicator animating={true} size="small"/>
-        <Text style={{ color:'#666666', paddingLeft:10 }}>努力加载中</Text>
+        <Text style={{color: '#666666', paddingLeft: 10}}>努力加载中</Text>
       </View>
     )
   }
   
-  headerRefreshing(){
+  renderFooter() {
+    let footer = null
+    
+    switch (this.state.footerRefreshState) {
+      case RefreshState.Idle:
+        break;
+      case RefreshState.Refreshing:
+        footer =
+          <View style={styles.loadingView}>
+            <ActivityIndicator size="small" />
+            <Text style={{color: '#666666', paddingLeft: 10}}>努力加载中</Text>
+          </View>
+        break;
+      case RefreshState.NoMoreData:
+        footer =
+          <View style={styles.loadingView}>
+            <Text style={{color: '#666666'}}>没有更多数据了</Text>
+          </View>
+        break;
+      case RefreshState.Failure:
+        footer =
+          <View style={styles.loadingView}>
+            <Text style={{color: '#666666'}}>加载失败，请稍后重试</Text>
+          </View>
+        break;
+    }
+    return footer;
+  }
+  
+  headerRefreshing() {
     this.setState({
-      pageIndex:0,
-      isHeaderRefreshing:true
+      isHeaderRefreshing: true
+    })
+    this.loadMovieData()
+  }
+  
+  footerRefreshing() {
+    // 如果正在刷新或者没有更多数据，就不再拉取数据
+    if (this.state.footerRefreshState == RefreshState.refreshing ||
+      this.state.footerRefreshState == RefreshState.NoMoreData ||
+      this.state.isHeaderRefreshing) {
+      return
+    }
+    this.setState({
+      footerRefreshState:RefreshState.Refreshing
     })
     this.loadMovieData()
   }
@@ -120,5 +188,6 @@ var styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5FCFF',
+    padding:10
   }
 });
