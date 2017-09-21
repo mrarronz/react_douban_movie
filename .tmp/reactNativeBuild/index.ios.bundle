@@ -61015,8 +61015,6 @@ var TheaterScene = function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      this.getCity();
-
       fetch((0, _service.queryMovies)('北京', 0, 50)).then(function (response) {
         return response.json();
       }).then(function (json) {
@@ -61084,13 +61082,13 @@ var TheaterScene = function (_Component) {
             },
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 83
+              lineNumber: 81
             }
           });
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 80
+          lineNumber: 78
         }
       });
     }
@@ -61101,19 +61099,19 @@ var TheaterScene = function (_Component) {
         _reactNative.View,
         { style: styles.loadingView, __source: {
             fileName: _jsxFileName,
-            lineNumber: 94
+            lineNumber: 92
           }
         },
         _react2.default.createElement(_reactNative.ActivityIndicator, { animating: true, size: 'small', __source: {
             fileName: _jsxFileName,
-            lineNumber: 95
+            lineNumber: 93
           }
         }),
         _react2.default.createElement(
           _reactNative.Text,
           { style: { color: '#666666', paddingLeft: 10 }, __source: {
               fileName: _jsxFileName,
-              lineNumber: 96
+              lineNumber: 94
             }
           },
           '\u52AA\u529B\u52A0\u8F7D\u4E2D'
