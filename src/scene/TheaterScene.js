@@ -20,7 +20,7 @@ export default class TheaterScene extends Component {
   }
   
   componentDidMount() {
-    fetch(queryMovies('武汉', 0, 20)).then((response) => response.json()).then((json) => {
+    fetch(queryMovies('北京', 0, 50)).then((response) => response.json()).then((json) => {
       console.log(json)
       var movies = []
       for (var idx in json.subjects) {
@@ -55,6 +55,21 @@ export default class TheaterScene extends Component {
     })
   }
   
+  /**
+   * 获取当前位置经纬度，调用百度地图api获取城市，然后根据城市调用豆瓣电影接口获取对应城市的电影
+   */
+  getCity() {
+    navigator.geolocation.getCurrentPosition((data) => {
+      console.log(data)
+      let url = getLocation(data.coords.latitude, data.coords.longitude)
+      fetch(url).then((response) => response.json()).then((json) => {
+        console.log(json)
+        let city = json.result.addressComponent.city
+        console.log("city: " + city)
+      })
+    })
+  }
+  
   render() {
     if (!this.state.loaded) {
       return this.renderLoadingView()
@@ -64,8 +79,8 @@ export default class TheaterScene extends Component {
         dataSource={this.state.dataSource}
         renderRow={(movie) =>
           <MovieCell movie={movie} onPress={() => {
-              this.props.navigation.navigate('Detail', {movie: movie})
-            }}
+            this.props.navigation.navigate('Detail', {movie: movie})
+          }}
           />
         }
       />

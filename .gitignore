@@ -61,3 +61,7 @@ typings/
 ios/build/
 
 android/app/build/
+
+ios/react_douban_movie.xcodeproj/project.xcworkspace/xcuserdata/
+
+ios/react_douban_movie.xcodeproj/xcuserdata/

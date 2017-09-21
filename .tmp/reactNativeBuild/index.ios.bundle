@@ -53159,7 +53159,7 @@ var _DetailScene = require(382            ); // 382 = ./DetailScene
 
 var _DetailScene2 = babelHelpers.interopRequireDefault(_DetailScene);
 
-var _color = require(375              ); // 375 = ../common/color
+var _color = require(377              ); // 377 = ../common/color
 
 var _color2 = babelHelpers.interopRequireDefault(_color);
 
@@ -53181,7 +53181,7 @@ var RootScene = function (_Component) {
       return _React2.default.createElement(Navigator, {
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 19
+          lineNumber: 18
         }
       });
     }
@@ -53206,7 +53206,7 @@ var Tab = (0, _reactNavigation.TabNavigator)({
             selectedImage: require(384                          ), // 384 = ../image/playing-active.png
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 30
+              lineNumber: 29
             }
           });
         }
@@ -53230,7 +53230,7 @@ var Tab = (0, _reactNavigation.TabNavigator)({
             selectedImage: require(386                         ), // 386 = ../image/coming-active.png
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 45
+              lineNumber: 44
             }
           });
         }
@@ -60385,17 +60385,9 @@ var _react2 = babelHelpers.interopRequireDefault(_react);
 
 var _reactNative = require(26            ); // 26 = react-native
 
-var _color = require(375              ); // 375 = ../common/color
+var _service = require(375                ); // 375 = ../common/service
 
-var _color2 = babelHelpers.interopRequireDefault(_color);
-
-var _screen = require(376               ); // 376 = ../common/screen
-
-var _screen2 = babelHelpers.interopRequireDefault(_screen);
-
-var _service = require(377                ); // 377 = ../common/service
-
-var _MovieCell = require(378          ); // 378 = ./MovieCell
+var _MovieCell = require(376          ); // 376 = ./MovieCell
 
 var _MovieCell2 = babelHelpers.interopRequireDefault(_MovieCell);
 
@@ -60436,7 +60428,7 @@ var ComingScene = function (_Component) {
     value: function loadMovieData() {
       var that = this;
       var pageIndex = this.state.pageIndex;
-      fetch((0, _service.comingMovies)('武汉', pageIndex, 20)).then(function (response) {
+      fetch((0, _service.comingMovies)('北京', pageIndex, 20)).then(function (response) {
         return response.json();
       }).then(function (json) {
         console.log(json);
@@ -60510,7 +60502,7 @@ var ComingScene = function (_Component) {
             },
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 105
+              lineNumber: 103
             }
           });
         },
@@ -60529,12 +60521,12 @@ var ComingScene = function (_Component) {
           tintColor: 'gray',
           __source: {
             fileName: _jsxFileName,
-            lineNumber: 114
+            lineNumber: 112
           }
         }),
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 102
+          lineNumber: 100
         }
       });
     }
@@ -60545,19 +60537,19 @@ var ComingScene = function (_Component) {
         _reactNative.View,
         { style: styles.loadingView, __source: {
             fileName: _jsxFileName,
-            lineNumber: 126
+            lineNumber: 124
           }
         },
         _react2.default.createElement(_reactNative.ActivityIndicator, { animating: true, size: 'small', __source: {
             fileName: _jsxFileName,
-            lineNumber: 127
+            lineNumber: 125
           }
         }),
         _react2.default.createElement(
           _reactNative.Text,
           { style: { color: '#666666', paddingLeft: 10 }, __source: {
               fileName: _jsxFileName,
-              lineNumber: 128
+              lineNumber: 126
             }
           },
           '\u52AA\u529B\u52A0\u8F7D\u4E2D'
@@ -60577,19 +60569,19 @@ var ComingScene = function (_Component) {
             _reactNative.View,
             { style: styles.loadingView, __source: {
                 fileName: _jsxFileName,
-                lineNumber: 141
+                lineNumber: 139
               }
             },
             _react2.default.createElement(_reactNative.ActivityIndicator, { size: 'small', __source: {
                 fileName: _jsxFileName,
-                lineNumber: 142
+                lineNumber: 140
               }
             }),
             _react2.default.createElement(
               _reactNative.Text,
               { style: { color: '#666666', paddingLeft: 10 }, __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 143
+                  lineNumber: 141
                 }
               },
               '\u52AA\u529B\u52A0\u8F7D\u4E2D'
@@ -60601,14 +60593,14 @@ var ComingScene = function (_Component) {
             _reactNative.View,
             { style: styles.loadingView, __source: {
                 fileName: _jsxFileName,
-                lineNumber: 148
+                lineNumber: 146
               }
             },
             _react2.default.createElement(
               _reactNative.Text,
               { style: { color: '#666666' }, __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 149
+                  lineNumber: 147
                 }
               },
               '\u6CA1\u6709\u66F4\u591A\u6570\u636E\u4E86'
@@ -60620,14 +60612,14 @@ var ComingScene = function (_Component) {
             _reactNative.View,
             { style: styles.loadingView, __source: {
                 fileName: _jsxFileName,
-                lineNumber: 154
+                lineNumber: 152
               }
             },
             _react2.default.createElement(
               _reactNative.Text,
               { style: { color: '#666666' }, __source: {
                   fileName: _jsxFileName,
-                  lineNumber: 155
+                  lineNumber: 153
                 }
               },
               '\u52A0\u8F7D\u5931\u8D25\uFF0C\u8BF7\u7A0D\u540E\u91CD\u8BD5'
@@ -60676,29 +60668,6 @@ var styles = _reactNative.StyleSheet.create({
   }
 });
 }, 374, null, "react_douban_movie/src/scene/ComingScene.js");
-__d(/* react_douban_movie/src/common/color.js */function(global, require, module, exports) {Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = {
-  themeColor: '#268dcd',
-  border: '#e0e0e0',
-  background: '#f3f3f3'
-};
-}, 375, null, "react_douban_movie/src/common/color.js");
-__d(/* react_douban_movie/src/common/screen.js */function(global, require, module, exports) {Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-
-var _reactNative = require(26            ); // 26 = react-native
-
-exports.default = {
-  screenWidth: _reactNative.Dimensions.get('window').width,
-  screenHeight: _reactNative.Dimensions.get('window').height,
-  onePixel: 1 / _reactNative.PixelRatio.get(),
-  statusBarHeight: _reactNative.Platform.OS == 'iOS' ? 20 : 0
-
-};
-}, 376, null, "react_douban_movie/src/common/screen.js");
 __d(/* react_douban_movie/src/common/service.js */function(global, require, module, exports) {Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -60706,11 +60675,10 @@ exports.getLocation = getLocation;
 exports.queryMovies = queryMovies;
 exports.comingMovies = comingMovies;
 exports.movieDetail = movieDetail;
-exports.default = {
-  baiduAK: "7VENmCeC4aaAfx3CKbSjT1K3oRucOgDK"
-};
-function getLocation(location) {
-  return "https://api.map.baidu.com/geocoder/v2/?ak=" + this.baiduAK + "&location=" + location + "&output=json&pois=1";
+function getLocation(latitude, longitude) {
+  var ak = "7VENmCeC4aaAfx3CKbSjT1K3oRucOgDK";
+  var locationParam = latitude + ',' + longitude;
+  return "https://api.map.baidu.com/geocoder/v2/?ak=" + ak + "&location=" + locationParam + "&output=json&pois=1";
 }
 
 function queryMovies(city, start, count) {
@@ -60724,7 +60692,7 @@ function comingMovies(city, start, count) {
 function movieDetail(movieId) {
   return "https://api.douban.com/v2/movie/subject/" + movieId;
 }
-}, 377, null, "react_douban_movie/src/common/service.js");
+}, 375, null, "react_douban_movie/src/common/service.js");
 __d(/* react_douban_movie/src/scene/MovieCell.js */function(global, require, module, exports) {Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -60736,11 +60704,11 @@ var _react2 = babelHelpers.interopRequireDefault(_react);
 
 var _reactNative = require(26            ); // 26 = react-native
 
-var _color = require(375              ); // 375 = ../common/color
+var _color = require(377              ); // 377 = ../common/color
 
 var _color2 = babelHelpers.interopRequireDefault(_color);
 
-var _screen = require(376               ); // 376 = ../common/screen
+var _screen = require(378               ); // 378 = ../common/screen
 
 var _screen2 = babelHelpers.interopRequireDefault(_screen);
 
@@ -60971,7 +60939,29 @@ var styles = _reactNative.StyleSheet.create({
     backgroundColor: '#F5FCFF'
   }
 });
-}, 378, null, "react_douban_movie/src/scene/MovieCell.js");
+}, 376, null, "react_douban_movie/src/scene/MovieCell.js");
+__d(/* react_douban_movie/src/common/color.js */function(global, require, module, exports) {Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = {
+  themeColor: '#268dcd',
+  border: '#e0e0e0',
+  background: '#f3f3f3'
+};
+}, 377, null, "react_douban_movie/src/common/color.js");
+__d(/* react_douban_movie/src/common/screen.js */function(global, require, module, exports) {Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _reactNative = require(26            ); // 26 = react-native
+
+exports.default = {
+  screenWidth: _reactNative.Dimensions.get('window').width,
+  screenHeight: _reactNative.Dimensions.get('window').height,
+  onePixel: 1 / _reactNative.PixelRatio.get(),
+  isPlatformiOS: _reactNative.Platform.OS === 'ios'
+};
+}, 378, null, "react_douban_movie/src/common/screen.js");
 __d(/* react_douban_movie/src/common/RefreshState.js */function(global, require, module, exports) {Object.defineProperty(exports, "__esModule", {
   value: true
 });
@@ -60993,11 +60983,11 @@ var _react2 = babelHelpers.interopRequireDefault(_react);
 
 var _reactNative = require(26            ); // 26 = react-native
 
-var _service = require(377                ); // 377 = ../common/service
+var _service = require(375                ); // 375 = ../common/service
 
 var _service2 = babelHelpers.interopRequireDefault(_service);
 
-var _MovieCell = require(378          ); // 378 = ./MovieCell
+var _MovieCell = require(376          ); // 376 = ./MovieCell
 
 var _MovieCell2 = babelHelpers.interopRequireDefault(_MovieCell);
 
@@ -61025,7 +61015,9 @@ var TheaterScene = function (_Component) {
     value: function componentDidMount() {
       var _this2 = this;
 
-      fetch((0, _service.queryMovies)('武汉', 0, 20)).then(function (response) {
+      this.getCity();
+
+      fetch((0, _service.queryMovies)('北京', 0, 50)).then(function (response) {
         return response.json();
       }).then(function (json) {
         console.log(json);
@@ -61062,6 +61054,21 @@ var TheaterScene = function (_Component) {
       });
     }
   }, {
+    key: 'getCity',
+    value: function getCity() {
+      navigator.geolocation.getCurrentPosition(function (data) {
+        console.log(data);
+        var url = (0, _service.getLocation)(data.coords.latitude, data.coords.longitude);
+        fetch(url).then(function (response) {
+          return response.json();
+        }).then(function (json) {
+          console.log(json);
+          var city = json.result.addressComponent.city;
+          console.log("city: " + city);
+        });
+      });
+    }
+  }, {
     key: 'render',
     value: function render() {
       var _this3 = this;
@@ -61077,13 +61084,13 @@ var TheaterScene = function (_Component) {
             },
             __source: {
               fileName: _jsxFileName,
-              lineNumber: 66
+              lineNumber: 83
             }
           });
         },
         __source: {
           fileName: _jsxFileName,
-          lineNumber: 63
+          lineNumber: 80
         }
       });
     }
@@ -61094,19 +61101,19 @@ var TheaterScene = function (_Component) {
         _reactNative.View,
         { style: styles.loadingView, __source: {
             fileName: _jsxFileName,
-            lineNumber: 77
+            lineNumber: 94
           }
         },
         _react2.default.createElement(_reactNative.ActivityIndicator, { animating: true, size: 'small', __source: {
             fileName: _jsxFileName,
-            lineNumber: 78
+            lineNumber: 95
           }
         }),
         _react2.default.createElement(
           _reactNative.Text,
           { style: { color: '#666666', paddingLeft: 10 }, __source: {
               fileName: _jsxFileName,
-              lineNumber: 79
+              lineNumber: 96
             }
           },
           '\u52AA\u529B\u52A0\u8F7D\u4E2D'
@@ -61181,7 +61188,7 @@ var _react2 = babelHelpers.interopRequireDefault(_react);
 
 var _reactNative = require(26            ); // 26 = react-native
 
-var _service = require(377                ); // 377 = ../common/service
+var _service = require(375                ); // 375 = ../common/service
 
 var DetailScene = function (_Component) {
   babelHelpers.inherits(DetailScene, _Component);

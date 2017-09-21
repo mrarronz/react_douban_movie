@@ -1,13 +1,12 @@
 import {
   Dimensions,
-  Platform,
-  PixelRatio
+  PixelRatio,
+  Platform
 } from 'react-native';
 
 export default {
   screenWidth: Dimensions.get('window').width,
   screenHeight: Dimensions.get('window').height,
-  onePixel: 1/PixelRatio.get(),
-  statusBarHeight: (Platform.OS == 'iOS' ? 20 : 0)
-  
+  onePixel: 1 / PixelRatio.get(),
+  isPlatformiOS: (Platform.OS === 'ios')
 }

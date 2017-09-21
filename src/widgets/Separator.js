@@ -1,11 +1,11 @@
-import { Component } from 'react';
-import { View, StyleSheet } from 'react-native';
-import { color, screen } from '../common';
+import {Component} from 'react';
+import {View, StyleSheet} from 'react-native';
+import {color, screen} from '../common';
 
 export default class Separator extends Component {
-  render () {
+  render() {
     return (
-      <View style={[styles.line, this.props.style]} />
+      <View style={[styles.line, this.props.style]}/>
     )
   }
 }

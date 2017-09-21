@@ -1,10 +1,7 @@
-
-export default {
-  baiduAK: "7VENmCeC4aaAfx3CKbSjT1K3oRucOgDK"
-}
-
-export function getLocation(location) {
-  return "https://api.map.baidu.com/geocoder/v2/?ak=" + this.baiduAK + "&location=" + location + "&output=json&pois=1"
+export function getLocation(latitude, longitude) {
+  var ak = "7VENmCeC4aaAfx3CKbSjT1K3oRucOgDK"
+  var locationParam = latitude + ',' + longitude
+  return "https://api.map.baidu.com/geocoder/v2/?ak=" + ak + "&location=" + locationParam + "&output=json&pois=1"
 }
 
 export function queryMovies(city, start, count) {

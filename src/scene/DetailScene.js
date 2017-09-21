@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {View, Image, Text, Button, StyleSheet, ActivityIndicator, ScrollView} from 'react-native';
+import {View, Image, Text, StyleSheet, ActivityIndicator, ScrollView} from 'react-native';
 import {movieDetail} from "../common/service";
 
 export default class DetailScene extends Component {
@@ -22,7 +22,7 @@ export default class DetailScene extends Component {
     this.loadMovieDetailData()
   }
   
-  render () {
+  render() {
     if (!this.state.loaded) {
       return this.renderLoadingView()
     }
@@ -72,10 +72,10 @@ export default class DetailScene extends Component {
         </View>
         <View style={styles.summaryContainer}>
           <Text style={styles.title}>剧情简介</Text>
-          <Text style={{ marginTop: 10, lineHeight:30, fontSize:15 }}>{film.summary}</Text>
+          <Text style={{marginTop: 10, lineHeight: 30, fontSize: 15}}>{film.summary}</Text>
         </View>
       </ScrollView>
-      
+    
     )
   }
   
@@ -96,10 +96,10 @@ export default class DetailScene extends Component {
       var types = json.genres.join(" ")
       var country = json.countries.join(" ")
       that.setState({
-        film:json,
-        movieType:types,
-        country:country,
-        loaded:true
+        film: json,
+        movieType: types,
+        country: country,
+        loaded: true
       })
     })
   }
@@ -168,9 +168,9 @@ const styles = StyleSheet.create({
   wishLabel: {
     fontSize: 16,
     color: '#444444',
-    marginTop:10,
-    marginBottom:10,
-    marginLeft:20,
-    marginRight:20
+    marginTop: 10,
+    marginBottom: 10,
+    marginLeft: 20,
+    marginRight: 20
   }
 })

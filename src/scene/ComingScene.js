@@ -1,7 +1,5 @@
 import React, {Component} from 'react';
-import {Text, ListView, View, Image, StyleSheet, ActivityIndicator, RefreshControl} from 'react-native';
-import color from '../common/color';
-import screen from '../common/screen';
+import {Text, ListView, View, StyleSheet, ActivityIndicator, RefreshControl} from 'react-native';
 import {comingMovies} from '../common/service';
 import MovieCell from './MovieCell';
 import RefreshState from '../common/RefreshState';
@@ -36,7 +34,7 @@ export default class ComingScene extends Component {
   loadMovieData() {
     var that = this
     let pageIndex = this.state.pageIndex
-    fetch(comingMovies('武汉', pageIndex, 20)).then((response) => response.json()).then((json) => {
+    fetch(comingMovies('北京', pageIndex, 20)).then((response) => response.json()).then((json) => {
       console.log(json)
       if (json == null) {
         that.setState({
@@ -104,7 +102,7 @@ export default class ComingScene extends Component {
         renderRow={(movie) =>
           <MovieCell movie={movie} onPress={() => {
             this.props.navigation.navigate('Detail', {movie: movie})
-            }}
+          }}
           />
         }
         renderFooter={() => this.renderFooter()}
@@ -139,7 +137,7 @@ export default class ComingScene extends Component {
       case RefreshState.Refreshing:
         footer =
           <View style={styles.loadingView}>
-            <ActivityIndicator size="small" />
+            <ActivityIndicator size="small"/>
             <Text style={{color: '#666666', paddingLeft: 10}}>努力加载中</Text>
           </View>
         break;
@@ -174,7 +172,7 @@ export default class ComingScene extends Component {
       return
     }
     this.setState({
-      footerRefreshState:RefreshState.Refreshing
+      footerRefreshState: RefreshState.Refreshing
     })
     this.loadMovieData()
   }
@@ -186,6 +184,6 @@ var styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    padding:10
+    padding: 10
   }
 });
