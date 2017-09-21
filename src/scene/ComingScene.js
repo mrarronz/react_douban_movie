@@ -102,7 +102,10 @@ export default class ComingScene extends Component {
       <ListView
         dataSource={this.state.dataSource}
         renderRow={(movie) =>
-          <MovieCell movie={movie}/>
+          <MovieCell movie={movie} onPress={() => {
+            this.props.navigation.navigate('Detail', {movie: movie})
+            }}
+          />
         }
         renderFooter={() => this.renderFooter()}
         onEndReachedThreshold={20}
@@ -114,7 +117,6 @@ export default class ComingScene extends Component {
             tintColor='gray'
           />
         }
-        style={styles.listView}
       />
     )
   }
@@ -179,15 +181,11 @@ export default class ComingScene extends Component {
 }
 
 var styles = StyleSheet.create({
-  listView: {
-    backgroundColor: '#F5FCFF',
-  },
   loadingView: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
     padding:10
   }
 });

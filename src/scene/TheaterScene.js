@@ -64,11 +64,10 @@ export default class TheaterScene extends Component {
         dataSource={this.state.dataSource}
         renderRow={(movie) =>
           <MovieCell movie={movie} onPress={() => {
-              this.props.navigation.navigate('Detail')
+              this.props.navigation.navigate('Detail', {movie: movie})
             }}
           />
         }
-        style={styles.listView}
       />
     )
   }
@@ -84,14 +83,10 @@ export default class TheaterScene extends Component {
 }
 
 var styles = StyleSheet.create({
-  listView: {
-    backgroundColor: '#F5FCFF',
-  },
   loadingView: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
   }
 });
